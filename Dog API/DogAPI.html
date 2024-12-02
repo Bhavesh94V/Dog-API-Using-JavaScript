@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog API</title>
+    <link rel="stylesheet" href="./main.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(225deg, #ffc480, #dcc474, #b8c26f, #93be70, #6fb673, #4bac78, #299e7b, #078f7d);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            color: #fff;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #4caf50;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .card {
+            max-width: 300px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            color: #333;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .card h3 {
+            margin: 10px 0;
+            font-size: 1.3rem;
+            color: #333;
+        }
+
+        #errorMsg {
+            margin-top: 20px;
+            color: #ff4e4e;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Dog API</h1>
+    <button id="fetchBtn">Get Random Dogs Image</button>
+    <div id="dogContainer" class="container"></div>
+    <p id="errorMsg"></p>
+
+    <script>
+        document.getElementById('fetchBtn').addEventListener('click', function () {
+            const dogContainer = document.getElementById('dogContainer');
+            const errorMsg = document.getElementById('errorMsg');
+            errorMsg.textContent = '';
+
+            fetch('https://dog.ceo/api/breeds/image/random')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const url = data.message;
+                        const breed = url.split('/')[4];
+
+                        const card = document.createElement('div');
+                        card.classList.add('card');
+
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.alt = breed;
+
+                        const name = document.createElement('h3');
+                        name.textContent = breed;
+
+                        card.appendChild(img);
+                        card.appendChild(name);
+                        dogContainer.appendChild(card);
+                    } else {
+                        errorMsg.textContent = 'Failed to fetch dog image.';
+                    }
+                })
+                .catch(() => {
+                    errorMsg.textContent = 'An error occurred. Please try again.';
+                });
+        });
+    </script>
+
+</body>
+
+</html>
